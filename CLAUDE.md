@@ -2,6 +2,54 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## What this repo is
+
+`close-skills` is a chain of Claude Code skills for end-of-session knowledge
+capture: `/close` runs `/learn`, `/nss`, and `/usfs`. Public, MIT-licensed.
+Keep it that way — no private paths, no machine-specific assumptions, no
+references to skills or tooling that do not ship in this repo.
+
+## Conventions
+
+- **Markdown and bash only. No runtime dependencies.** `package.json` exists for
+  `npm test` and metadata; never add npm dependencies.
+- **Every skill ships under two names.** A short one (`nss`) holding the real
+  documentation, and a kebab-case alias (`new-skills-session`) that does nothing
+  but delegate via the Skill tool. Add one, add both, and add both to the
+  `SKILLS` array in `install.sh` and `EXPECTED_SKILLS` in `tests/run-tests.sh`.
+- **A SKILL.md's front-matter `name` must equal its directory name.** Claude
+  Code resolves skills by that name; a mismatch makes the skill invocable only
+  under a name nobody will guess. There is a test for this.
+- **No references to skills outside this repo.** It is the single easiest way to
+  ship something that half-works for everyone but the author. If a skill in here
+  wants to call `/foo`, either `/foo` ships here too or the reference comes out.
+- **Deterministic logic goes in `scripts/`, judgment goes in SKILL.md.** This is
+  the advice `/ns` gives; the repo should follow it.
+- **Guard non-zero exits under `set -euo pipefail`.** `grep`, `diff`, and
+  `git config --get` all exit 1 on legitimate outcomes. `scripts/` and
+  `install.sh` both depend on getting this right.
+- Support bash 4.0+ and both GNU and BSD/macOS userland. `md5sum` and
+  `readlink -f` are GNU-only; the iterator prefers `sha256sum` with a `shasum`
+  fallback for exactly this reason.
+
+## Before committing
+
+```bash
+./tests/run-tests.sh     # must be 0 failures
+```
+
+Tests are plain bash with no framework. Anything touching the filesystem must
+work inside a `mktemp -d` scratch directory — a test that writes to the real
+`~/.claude` will eventually clobber the developer's own skills. `install.sh`
+takes a config directory argument specifically so tests can point it somewhere
+harmless.
+
+One test greps the whole repo for absolute home paths — anything rooted at a
+Linux or macOS home directory, or at a personal working tree. If it fails,
+something machine-specific leaked in; parameterize it rather than deleting the
+test.
+
+---
 
 ### Using bv as an AI sidecar
 

@@ -1,7 +1,22 @@
 {
   "name": "close-skills",
-  "version": "1.0.0",
-  "main": "index.js",
+  "version": "0.1.0",
+  "description": "End-of-session knowledge capture skills for Claude Code: /close runs /learn, /nss, and /usfs",
   "author": "@micahstubbs <git@micah.fyi>",
-  "license": "UNLICENSED"
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "skills",
+    "agent",
+    "knowledge-capture",
+    "lessons-learned"
+  ],
+  "files": [
+    "skills",
+    "scripts",
+    "install.sh"
+  ],
+  "scripts": {
+    "test": "./tests/run-tests.sh"
+  }
 }
