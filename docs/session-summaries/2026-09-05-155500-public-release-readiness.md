@@ -71,6 +71,16 @@ Beads issue `close-skills-m8g`.
 - The beads issues from the original epic that describe already-done work
   are still open locally.
 
+## Close-session capture
+
+- `LESSONS.md` created with three lessons: crate name vs binary name,
+  `--version` on stderr, filter-repo's stdin prompt and remote removal.
+- New user-level skill `pfa` / `public-flip-audit` with
+  `public-flip-audit.sh`: the nine-check audit that gates the flip.
+- Updated `osp` (hands off to `pfa`, names the two flip-blockers its output
+  carries), `spaceship-redirect` (same-day registration delegation lag), and
+  `pgh` (filter-repo `already_ran` prompt).
+
 ## Next Session Context
 
 The installer has been exercised on Linux x86_64 with glibc only. The
