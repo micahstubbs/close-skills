@@ -7,7 +7,26 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 `close-skills` is a chain of Claude Code skills for end-of-session knowledge
 capture: `/close` runs `/learn`, `/nss`, and `/usfs`. Public, MIT-licensed.
 Keep it that way — no private paths, no machine-specific assumptions, no
-references to skills or tooling that do not ship in this repo.
+references to skills or tooling that do not ship in this repo or install from
+it. The one external dependency the repo admits is the beads issue tracker,
+and `scripts/install-beads.sh` exists so that reference is honest.
+
+## Issue tracking
+
+This project tracks its own work in [beads](https://github.com/Dicklesworthstone/beads_rust):
+`br` is the tracker, `bv` (binary name `bvr`, from
+[beads_viewer_rust](https://github.com/Dicklesworthstone/beads_viewer_rust))
+is the graph-aware triage view over it. Neither is required to use the
+skills; they are required to work on this repo the way its author does.
+
+```bash
+scripts/install-beads.sh            # br + bv into ~/.local/bin
+scripts/install-beads.sh --dry-run  # see what it would do first
+```
+
+`.beads/` is gitignored on purpose: the tracker's export embeds absolute
+source paths, which would leak a home directory into a public tree. Issues
+live locally; the JSONL never gets committed here.
 
 ## Conventions
 
@@ -28,6 +47,11 @@ references to skills or tooling that do not ship in this repo.
 - **Guard non-zero exits under `set -euo pipefail`.** `grep`, `diff`, and
   `git config --get` all exit 1 on legitimate outcomes. `scripts/` and
   `install.sh` both depend on getting this right.
+- **Installers never remove what they did not install.** `install.sh` checks
+  symlink targets and byte-identity; `scripts/install-beads.sh` keeps a
+  manifest of SHA-256 digests and refuses to touch a binary that does not
+  match it. Keep both `--uninstall` paths that conservative, and keep their
+  tests offline (`--dry-run` plus hand-made manifests, never the network).
 - Support bash 4.0+ and both GNU and BSD/macOS userland. `md5sum` and
   `readlink -f` are GNU-only; the iterator prefers `sha256sum` with a `shasum`
   fallback for exactly this reason.

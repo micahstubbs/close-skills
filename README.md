@@ -177,6 +177,33 @@ No issue tracker, package manager, or external service is required. `/ns`
 commits new skills to `~/.claude` if that directory happens to be a git repo,
 and quietly skips the commit if it isn't.
 
+## Optional: the beads issue tracker
+
+This repo tracks its own work in [beads](https://github.com/Dicklesworthstone/beads_rust),
+a local-first issue tracker that lives in a `.beads/` directory next to the
+code, and triages it with [beads_viewer_rust](https://github.com/Dicklesworthstone/beads_viewer_rust),
+a graph-aware view over the same data. The skills do not need either. If you
+want them anyway, one script installs both:
+
+```bash
+scripts/install-beads.sh                 # br + bv into ~/.local/bin
+scripts/install-beads.sh --dest DIR      # somewhere else
+scripts/install-beads.sh --only br       # just the tracker
+scripts/install-beads.sh --dry-run       # show the plan, touch nothing
+scripts/install-beads.sh --uninstall     # remove what it installed
+```
+
+`br` is downloaded as a prebuilt release binary and verified against the
+release's SHA-256 checksum. `bv` publishes no binaries, so it is built from
+the `beads_viewer_rust` crate with `cargo install`; that needs a Rust
+toolchain from [rustup.rs](https://rustup.rs) and takes a few minutes. Its
+binary is called `bvr`, and the script links `bv` to it so the usual name
+works. `--from-source` builds both from their git repositories instead;
+`--br-version` and `--bv-version` pin releases.
+
+The script keeps a manifest of what it installed and, like `install.sh`,
+refuses to overwrite or remove anything it did not put there.
+
 ## Tests
 
 ```bash
@@ -197,6 +224,7 @@ skills/usfs/                   update existing skills
 skills/ns/, nsp/               write a skill (explicit names / auto-picked)
 skills/<long-name>/            alias directories delegating to the short names
 scripts/git-commit-iterator.sh resumable chunked walk through git history
+scripts/install-beads.sh       optional: install the br/bv issue tracker
 install.sh                     symlink or copy into ~/.claude
 tests/run-tests.sh             smoke tests
 ```
